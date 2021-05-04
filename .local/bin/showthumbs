@@ -1,0 +1,17 @@
+#!/bin/bash
+# Generates thumbnails from videos in a directory tree at max depth of
+# $2 and shows them in sxiv
+# Be careful running this in a tree with a lot of videos
+
+size=$3
+[ -z "$1" ] && exit 1
+[ -z "$2" ] && exit 1
+[ -z "$size" ] && size=0
+
+[ ! -d "/tmp$1/" ] && mkdir -p "/tmp$1/"
+
+find "$1" -maxdepth "$2" \( -name "*.mp4" -or -name "*.mkv" -or -name "*.webm" \) -print0 | while read -d $'\0' file
+do
+    [ ! -f "/tmp$file.png" ] && ffmpegthumbnailer -i "$file" -o "/tmp$file.png" -s $size -q 10
+done
+sxiv -tr "/tmp/$1/"

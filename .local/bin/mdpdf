@@ -1,0 +1,28 @@
+#!/bin/sh
+
+[ -f "$1" ] && f="$1"
+[ -f "$2" ] && f="$2"
+
+flavor="gfm"
+landscape=0
+
+#Use standard Markdown instead of Github Markdown if -s is given
+while getopts ":sl" option; do
+    case $option in
+        s)
+            flavor="markdown"
+            ;;
+        l)
+            landscape=1
+            ;;
+        *)
+            echo "invalid option $OPTARG"; exit 1
+            ;;
+    esac
+done
+
+if [ $landscape = 0 ]; then
+    pandoc -f "$flavor" "$f" -t pdf | zathura -
+else
+    pandoc -f "$flavor" -V geometry:landscape "$f" -t pdf | zathura -
+fi

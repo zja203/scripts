@@ -1,0 +1,16 @@
+#!/usr/bin/python
+import random, sys
+
+if (len(sys.argv) == 2):
+    i = sys.argv[1]
+elif (len(sys.argv) > 2):
+    print("Too many args!", file=sys.stderr)
+    exit(1)
+else:
+    i = sys.stdin.read().rstrip()
+
+o = ""
+for c in i:
+    o += (c.upper() if random.randint(0,1) == 1 else c)
+
+print(o)

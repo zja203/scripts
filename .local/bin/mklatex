@@ -1,0 +1,2 @@
+#!/bin/bash
+cp $HOME/templates/latex/$(ls $HOME/templates/latex | dmenu) $1
