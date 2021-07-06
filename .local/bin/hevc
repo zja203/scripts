@@ -1,5 +1,6 @@
 #!/bin/sh
 
 # -rc constqp -qp 24
-
-[ -f "$1" ] && [ -n "$2" ] && ffmpeg -hwaccel auto -i "$1" -pix_fmt yuv420p -map 0:v -map 0:a? -map_metadata 0 -c:v hevc_nvenc -rc constqp -qp "$2" -b:v 0K -c:a aac -b:a 0k "${1%%.*}_HEVC.mp4"
+# -pix_fmt yuv420p
+([ -n "$2" ] && qp="$2") || qp=24
+[ -f "$1" ] && ffmpeg -hwaccel auto -i "$1" -map 0:v -map 0:a? -map_metadata 0 -c:v hevc_nvenc -rc constqp -qp "$qp" -b:v 0K -c:a copy "${1%%.*}_HEVC.mp4"
