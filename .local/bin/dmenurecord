@@ -41,6 +41,20 @@ screencast() { \
 	updateicon "⏺️🎙️"
        	}
 
+screencast1080() { \
+	ffmpeg -y \
+	-f x11grab \
+	-framerate 30 \
+	-s "1920x1080" \
+    -i :0.0+0,0 \
+	-f alsa -i default \
+	-r 30 \
+ 	-c:v h264_nvenc -crf 25 -preset fast \
+	"$HOME/screencast-$(date '+%y%m%d-%H%M-%S').mp4" &
+	echo $! > /tmp/recordingpid
+	updateicon "⏺️🎙️"
+       	}
+
 video() { ffmpeg \
 	-f x11grab \
 	-s "$(xdpyinfo | grep dimensions | awk '{print $2;}')" \
@@ -80,9 +94,10 @@ audio() { \
 	}
 
 askrecording() { \
-	choice=$(printf "screencast\\nvideo\\naudio\\nwebcam\\nwebcam (hi-def)" | dmenu -i -p "Select recording style:")
+    choice=$(printf "screencast\\nscreencast (1080p)\\nvideo\\naudio\\nwebcam\\nwebcam (hi-def)" | dmenu -i -p "Select recording style:")
 	case "$choice" in
 		screencast) screencast;;
+        "screencast (1080p)") screencast1080;;
 		audio) audio;;
 		video) video;;
 		webcam) webcam;;
@@ -98,6 +113,7 @@ asktoend() { \
 
 case "$1" in
 	screencast) screencast;;
+    "screencast (1080p)") screencast1080;;
 	audio) audio;;
 	video) video;;
 	kill) killrecording;;
